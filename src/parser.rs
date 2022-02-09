@@ -18,8 +18,3 @@ pub fn parser() {
 
     }
 }
-
-fn main() {
-parser();
-    
-}
