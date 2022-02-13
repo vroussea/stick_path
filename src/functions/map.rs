@@ -1,7 +1,8 @@
+#[derive(PartialEq, Eq)]
 pub struct Cell {
-    left: bool,
-    right: bool,
-    cell_char: char,
+    pub left: bool,
+    pub right: bool,
+    pub cell_char: char,
 }
 
 pub struct Map {

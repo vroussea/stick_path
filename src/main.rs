@@ -1,10 +1,7 @@
-use crate::map::Map;
+use stick_path::run;
 
-mod map;
-mod errors;
-mod parser;
+
 
 fn main() {
-    let map = parser::parse();
-    
+    run();
 }

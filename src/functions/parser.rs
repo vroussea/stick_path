@@ -1,6 +1,6 @@
-use crate::errors;
+use crate::functions::errors;
 use std::io;
-use crate::map::{Map, Cell};
+use crate::functions::map::{Map, Cell};
 
 macro_rules! parse_input {
     ($x:expr, $t:ident) => ($x.trim().parse::<$t>()?)
