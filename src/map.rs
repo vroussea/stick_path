@@ -29,6 +29,6 @@ impl Map {
             println!("{}", line);
         }
         
-        return Map {height: 1, width: 2};
+        return Map {height: 1, width: 2, map: Vec::new()};
     }
 }
