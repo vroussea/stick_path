@@ -2,8 +2,9 @@ use crate::map::Map;
 
 mod map;
 mod errors;
+mod parser;
 
 fn main() {
-    Map::parser();
+    let map = parser::parse();
     
 }
