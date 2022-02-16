@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests_map {
     use stick_path::functions::map;
+    use stick_path::functions::parser::convert_to_cells;
 
     #[test]
     fn convert_simple_line() {

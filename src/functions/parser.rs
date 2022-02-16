@@ -39,7 +39,7 @@ fn read_size() -> Result<(u8, u8), errors::CustomError>{
     return Ok((width, height));
 }
 
-fn convert_to_cells(line: &str) -> Vec<Cell>{
+pub fn convert_to_cells(line: &str) -> Vec<Cell>{
     let mut converted_line: Vec<Cell> = Vec::new();
 
     let line = line.replace(" ", "");
