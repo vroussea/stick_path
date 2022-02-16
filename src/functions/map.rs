@@ -5,6 +5,12 @@ pub struct Cell {
     pub cell_char: char,
 }
 
+impl Cell {
+    pub fn new((left, right): (bool, bool), character: char) -> Cell{
+        return Cell {left: left, right: right, cell_char: character};
+    }
+}
+
 pub struct Map {
     _height: u8,
     _width: u8,

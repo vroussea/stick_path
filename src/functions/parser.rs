@@ -31,10 +31,32 @@ fn read_line() -> Result<Vec<Cell>, errors::CustomError>{
     return Ok(Vec::new());
 }
 
-fn read_size() -> Result<(u8, u8), errors::CustomError> {
+fn read_size() -> Result<(u8, u8), errors::CustomError>{
     let input_line = read_input()?;
     let inputs = input_line.split(" ").collect::<Vec<_>>();
     let width = parse_input!(inputs[0], u8);
     let height = parse_input!(inputs[1], u8);
     return Ok((width, height));
+}
+
+fn convert_to_cells(line: &str) -> Vec<Cell>{
+    let mut converted_line: Vec<Cell> = Vec::new();
+
+    let line = line.replace(" ", "");
+    let line: Vec<char> = line.chars().collect();
+    for i in 0..line.len() {
+        if line[i] != '-' {
+            let mut left = false;
+            let mut right = false;
+            if i > 0 && line[i - 1] == '-' {
+                left = true;
+            }
+            if i + 1 < line.len() && line[i + 1] == '-' {
+                right = true;
+            }
+            converted_line.push(Cell::new((left, right), line[i]));
+        } 
+    }
+
+    return converted_line;
 }
