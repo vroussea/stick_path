@@ -1,8 +1,5 @@
-use crate::map::Map;
-
-mod map;
+use stick_path::run;
 
 fn main() {
-    Map::parser();
-    
+    run();
 }
