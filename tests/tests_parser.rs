@@ -1,5 +1,5 @@
 #[cfg(test)]
-mod tests_map {
+mod tests_parser {
     use stick_path::functions::map;
     use stick_path::functions::parser::convert_to_cells;
 
