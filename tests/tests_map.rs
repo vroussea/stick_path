@@ -9,7 +9,7 @@ mod tests_map {
         map.cells.push([Cell::new((false, false), '|')].to_vec());
         map.cells.push([Cell::new((false, false), '1')].to_vec());
         println!("cells: {:?}", map.cells);
-        map =  map.resolve();
+        let map =  map.resolve();
 
         assert_eq!(map.answer, ["a1"].to_vec());
     }

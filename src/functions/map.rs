@@ -1,3 +1,5 @@
+use std::fmt;
+
 #[derive(PartialEq, Eq, Debug, Clone)]
 pub struct Cell {
     pub left: bool,
@@ -30,7 +32,7 @@ impl Map {
         };
     }
 
-    fn resolve_one_column(map: Map, mut current_columns: usize) -> Option<char> {
+    fn resolve_one_column(map: &Map, mut current_columns: usize) -> Option<char> {
         for lines in 1..map.height as usize {
             if map.cells[lines][current_columns].cell_char != '|' {
                 return Some(map.cells[lines][current_columns].cell_char);
@@ -47,15 +49,23 @@ impl Map {
         return None;
     }
 
-    pub fn resolve(self) -> Map {
-        let mut map = self.clone();
-
-        for columns in 0..map.width as usize {
-            let mut current: String = String::from(map.cells[0][columns].cell_char);
-
-            current.push(Map::resolve_one_column(map.clone(), columns).expect("how could that happen ?"));
-            map.answer.push(current);
+    pub fn resolve(&mut self) -> &Self {
+        for columns in 0..self.width as usize {
+            let mut current: String = String::from(self.cells[0][columns].cell_char);
+            current.push(Map::resolve_one_column(self, columns).expect("how could that happen ?"));
+            self.answer.push(current);
         }
-        return map;
+        return self;
+    }
+}
+
+impl fmt::Display for Map {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut result = String::new();
+        for answer in &self.answer {
+            result.push_str(&answer);
+            result.push('\n');
+        }
+        write!(f, "{}", result)
     }
 }

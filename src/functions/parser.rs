@@ -24,11 +24,8 @@ fn read_input() -> Result<String, errors::CustomError>{
 }
 
 fn read_line() -> Result<Vec<Cell>, errors::CustomError>{
-    let mut input_line = String::new();
-    io::stdin().read_line(&mut input_line)?;
-    let line = input_line.trim_end().to_string();
-    println!("{}", line);
-    return Ok(Vec::new());
+    let line = read_input()?.trim_end().to_string();
+    return Ok(convert_to_cells(&line));
 }
 
 fn read_size() -> Result<(u8, u8), errors::CustomError>{

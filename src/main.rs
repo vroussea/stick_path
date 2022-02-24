@@ -1,5 +1,6 @@
 use stick_path::run;
+use stick_path::functions::errors::CustomError;
 
-fn main() {
-    run();
+fn main() -> Result<(), CustomError>{
+    return run();
 }
