@@ -33,6 +33,12 @@ fn read_size() -> Result<(u8, u8), errors::CustomError>{
     let inputs = input_line.split(" ").collect::<Vec<_>>();
     let width = parse_input!(inputs[0], u8);
     let height = parse_input!(inputs[1], u8);
+    if width < 3 {
+        return Err(errors::CustomError::from("Witdh must be >= 3"));
+    }
+    if height > 100 {
+        return Err(errors::CustomError::from("Height must be <= 100"));    
+    }
     return Ok((width, height));
 }
 

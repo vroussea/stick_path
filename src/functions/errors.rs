@@ -21,3 +21,9 @@ impl From<std::num::ParseIntError> for CustomError {
         CustomError{message: format!("Invalid data type: {}", e.to_string())}
     }
 }
+
+impl From<&str> for CustomError {
+    fn from(e: &str) -> CustomError {
+        CustomError{message: e.to_string()}
+    }
+}
