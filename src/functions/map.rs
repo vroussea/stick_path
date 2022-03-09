@@ -19,17 +19,17 @@ impl Cell {
 
 #[derive(Clone)]
 pub struct Map {
-    height: u8,
-    width: u8,
+    pub height: u8,
+    pub width: u8,
     pub cells: Vec<Vec<Cell>>,
     pub answer: Vec<String>,
 }
 
 impl Map {
-    pub fn new(height: u8, width: u8) -> Map {
+    pub fn new(width: u8, height: u8) -> Map {
         return Map {
-            height: height,
-            width: width,
+            height,
+            width,
             cells: Vec::new(),
             answer: Vec::new(),
         };
@@ -63,9 +63,33 @@ impl Map {
 impl fmt::Display for Map {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut result = String::new();
-        for answer in &self.answer {
+        if self.answer.len() > 0 {
+            result.push_str(&self.answer[0]);
+            if self.answer.len() > 1 {
+                for answer in &self.answer[1..] {
+                    result.push('\n');
+                    result.push_str(&answer);
+                }
+            } else {
+                result.push_str("\n");
+            }
+        }
+        write!(f, "{}", result)
+    }
+}
+
+impl fmt::Debug for Map {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut result = String::new();
+        result.push_str(&format!("{} {}\n", self.width, self.height));
+        for line in &self.cells[..] {
+            for cell in line {
+                result.push_str(&format!("{:?} ", cell));
+            }
+            result.push_str("\n");
+        }
+        for answer in &self.answer[..] {
             result.push_str(&answer);
-            result.push('\n');
         }
         write!(f, "{}", result)
     }
@@ -75,14 +99,218 @@ impl fmt::Display for Map {
 mod tests_map {
     use super::*;
     #[test]
-    fn small_map() {
-        let mut map = Map::new(3, 1);
-        map.cells.push([Cell::new((false, false), 'a')].to_vec());
-        map.cells.push([Cell::new((false, false), '|')].to_vec());
-        map.cells.push([Cell::new((false, false), '1')].to_vec());
-        println!("cells: {:?}", map.cells);
+    fn small_map_easy() {
+        let mut map = Map::new(3, 3);
+        map.cells.push(
+            [
+                Cell::new((false, false), 'a'),
+                Cell::new((false, false), 'b'),
+                Cell::new((false, false), 'c'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, false), '|'),
+                Cell::new((false, false), '|'),
+                Cell::new((false, false), '|'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, false), '1'),
+                Cell::new((false, false), '2'),
+                Cell::new((false, false), '3'),
+            ]
+            .to_vec(),
+        );
         let map = map.resolve();
 
-        assert_eq!(map.answer, ["a1"].to_vec());
+        assert_eq!(map.answer, ["a1", "b2", "c3"].to_vec());
+    }
+
+    #[test]
+    fn small_map_hard() {
+        let mut map = Map::new(3, 3);
+        map.cells.push(
+            [
+                Cell::new((false, false), 'a'),
+                Cell::new((false, false), 'b'),
+                Cell::new((false, false), 'c'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, true), '|'),
+                Cell::new((true, false), '|'),
+                Cell::new((false, false), '|'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, false), '1'),
+                Cell::new((false, false), '2'),
+                Cell::new((false, false), '3'),
+            ]
+            .to_vec(),
+        );
+        let map = map.resolve();
+
+        assert_eq!(map.answer, ["a2", "b1", "c3"].to_vec());
+    }
+
+    #[test]
+    fn medium_map_easy() {
+        let mut map = Map::new(4, 4);
+        map.cells.push(
+            [
+                Cell::new((false, false), 'a'),
+                Cell::new((false, false), 'b'),
+                Cell::new((false, false), 'c'),
+                Cell::new((false, false), 'd'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, false), '|'),
+                Cell::new((false, false), '|'),
+                Cell::new((false, false), '|'),
+                Cell::new((false, false), '|'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, false), '|'),
+                Cell::new((false, false), '|'),
+                Cell::new((false, false), '|'),
+                Cell::new((false, false), '|'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, false), '1'),
+                Cell::new((false, false), '2'),
+                Cell::new((false, false), '3'),
+                Cell::new((false, false), '4'),
+            ]
+            .to_vec(),
+        );
+        let map = map.resolve();
+
+        assert_eq!(map.answer, ["a1", "b2", "c3", "d4"].to_vec());
+    }
+
+    #[test]
+    fn medium_map_hard() {
+        let mut map = Map::new(4, 4);
+        map.cells.push(
+            [
+                Cell::new((false, false), 'a'),
+                Cell::new((false, false), 'b'),
+                Cell::new((false, false), 'c'),
+                Cell::new((false, false), 'd'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, true), '|'),
+                Cell::new((true, false), '|'),
+                Cell::new((false, true), '|'),
+                Cell::new((true, false), '|'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, false), '|'),
+                Cell::new((false, true), '|'),
+                Cell::new((true, false), '|'),
+                Cell::new((false, false), '|'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, false), '1'),
+                Cell::new((false, false), '2'),
+                Cell::new((false, false), '3'),
+                Cell::new((false, false), '4'),
+            ]
+            .to_vec(),
+        );
+        let map = map.resolve();
+
+        assert_eq!(map.answer, ["a3", "b1", "c4", "d2"].to_vec());
+    }
+
+    #[test]
+    fn example_one() {
+        let mut map = Map::new(3, 7);
+        map.cells.push(
+            [
+                Cell::new((false, false), 'a'),
+                Cell::new((false, false), 'b'),
+                Cell::new((false, false), 'c'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, false), '|'),
+                Cell::new((false, false), '|'),
+                Cell::new((false, false), '|'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, true), '|'),
+                Cell::new((true, false), '|'),
+                Cell::new((false, false), '|'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, false), '|'),
+                Cell::new((false, true), '|'),
+                Cell::new((true, false), '|'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, false), '|'),
+                Cell::new((false, true), '|'),
+                Cell::new((true, false), '|'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, false), '|'),
+                Cell::new((false, false), '|'),
+                Cell::new((false, false), '|'),
+            ]
+            .to_vec(),
+        );
+        map.cells.push(
+            [
+                Cell::new((false, false), '1'),
+                Cell::new((false, false), '2'),
+                Cell::new((false, false), '3'),
+            ]
+            .to_vec(),
+        );
+        let map = map.resolve();
+
+        assert_eq!(map.answer, ["a2", "b1", "c3"].to_vec());
     }
 }

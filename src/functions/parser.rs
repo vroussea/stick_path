@@ -10,10 +10,11 @@ macro_rules! parse_input {
 
 pub fn parse() -> Result<Map, errors::CustomError> {
     let (width, height) = read_size()?;
-    let mut map = Map::new(height, width);
+    let mut map = Map::new(width, height);
     for _ in 0..height {
         map.cells.push(read_line()?);
     }
+    map.width = map.cells[0].len() as u8;
     return Ok(map);
 }
 
@@ -70,7 +71,7 @@ mod tests_parser {
     use crate::functions::map;
 
     #[test]
-    fn _convert_simple_line() {
+    fn convert_simple_line() {
         let line: &str = "|";
         let vec = convert_to_cells(line);
         assert_eq!(
