@@ -5,11 +5,6 @@ pub struct CustomError {
     message: String,
 }
 
-
-// impl From<ParsingIntError> for CustomError{
-
-// }
-
 impl From<Error> for CustomError {
     fn from(e: Error) -> CustomError {
         CustomError{message: format!("Generic IO error: {}", e.to_string())}

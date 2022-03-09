@@ -1,9 +1,11 @@
 use crate::functions::errors;
+use crate::functions::map::{Cell, Map};
 use std::io;
-use crate::functions::map::{Map, Cell};
 
 macro_rules! parse_input {
-    ($x:expr, $t:ident) => ($x.trim().parse::<$t>()?)
+    ($x:expr, $t:ident) => {
+        $x.trim().parse::<$t>()?
+    };
 }
 
 pub fn parse() -> Result<Map, errors::CustomError> {
@@ -12,23 +14,21 @@ pub fn parse() -> Result<Map, errors::CustomError> {
     for _ in 0..height {
         map.cells.push(read_line()?);
     }
-    
     return Ok(map);
 }
 
-
-fn read_input() -> Result<String, errors::CustomError>{
+fn read_input() -> Result<String, errors::CustomError> {
     let mut input_line = String::new();
     io::stdin().read_line(&mut input_line)?;
     return Ok(input_line);
 }
 
-fn read_line() -> Result<Vec<Cell>, errors::CustomError>{
+fn read_line() -> Result<Vec<Cell>, errors::CustomError> {
     let line = read_input()?.trim_end().to_string();
     return Ok(convert_to_cells(&line));
 }
 
-fn read_size() -> Result<(u8, u8), errors::CustomError>{
+fn read_size() -> Result<(u8, u8), errors::CustomError> {
     let input_line = read_input()?;
     let inputs = input_line.split(" ").collect::<Vec<_>>();
     let width = parse_input!(inputs[0], u8);
@@ -37,12 +37,12 @@ fn read_size() -> Result<(u8, u8), errors::CustomError>{
         return Err(errors::CustomError::from("Witdh must be >= 3"));
     }
     if height > 100 {
-        return Err(errors::CustomError::from("Height must be <= 100"));    
+        return Err(errors::CustomError::from("Height must be <= 100"));
     }
     return Ok((width, height));
 }
 
-pub fn convert_to_cells(line: &str) -> Vec<Cell>{
+pub fn convert_to_cells(line: &str) -> Vec<Cell> {
     let mut converted_line: Vec<Cell> = Vec::new();
 
     let line = line.replace(" ", "");
@@ -58,8 +58,194 @@ pub fn convert_to_cells(line: &str) -> Vec<Cell>{
                 right = true;
             }
             converted_line.push(Cell::new((left, right), line[i]));
-        } 
+        }
     }
 
     return converted_line;
+}
+
+#[cfg(test)]
+mod tests_parser {
+    use super::*;
+    use crate::functions::map;
+
+    #[test]
+    fn _convert_simple_line() {
+        let line: &str = "|";
+        let vec = convert_to_cells(line);
+        assert_eq!(
+            vec[0],
+            map::Cell {
+                left: false,
+                right: false,
+                cell_char: '|'
+            }
+        );
+    }
+
+    #[test]
+    fn _convert_three_characters_line() {
+        let line: &str = "| | |";
+        let vec = convert_to_cells(line);
+        assert_eq!(
+            vec[0],
+            map::Cell {
+                left: false,
+                right: false,
+                cell_char: '|'
+            }
+        );
+        assert_eq!(
+            vec[1],
+            map::Cell {
+                left: false,
+                right: false,
+                cell_char: '|'
+            }
+        );
+        assert_eq!(
+            vec[2],
+            map::Cell {
+                left: false,
+                right: false,
+                cell_char: '|'
+            }
+        );
+    }
+
+    #[test]
+    fn _convert_one_bridge() {
+        let line: &str = "| |--|";
+        let vec = convert_to_cells(line);
+        assert_eq!(
+            vec[0],
+            map::Cell {
+                left: false,
+                right: false,
+                cell_char: '|'
+            }
+        );
+        assert_eq!(
+            vec[1],
+            map::Cell {
+                left: false,
+                right: true,
+                cell_char: '|'
+            }
+        );
+        assert_eq!(
+            vec[2],
+            map::Cell {
+                left: true,
+                right: false,
+                cell_char: '|'
+            }
+        );
+    }
+
+    #[test]
+    fn _convert_two_bridges() {
+        let line: &str = "|--|--|";
+        let vec = convert_to_cells(line);
+        assert_eq!(
+            vec[0],
+            map::Cell {
+                left: false,
+                right: true,
+                cell_char: '|'
+            }
+        );
+        assert_eq!(
+            vec[1],
+            map::Cell {
+                left: true,
+                right: true,
+                cell_char: '|'
+            }
+        );
+        assert_eq!(
+            vec[2],
+            map::Cell {
+                left: true,
+                right: false,
+                cell_char: '|'
+            }
+        );
+    }
+
+    #[test]
+    fn _first_line() {
+        let line: &str = "? A n ,";
+        let vec = convert_to_cells(line);
+        assert_eq!(
+            vec[0],
+            map::Cell {
+                left: false,
+                right: false,
+                cell_char: '?'
+            }
+        );
+        assert_eq!(
+            vec[1],
+            map::Cell {
+                left: false,
+                right: false,
+                cell_char: 'A'
+            }
+        );
+        assert_eq!(
+            vec[2],
+            map::Cell {
+                left: false,
+                right: false,
+                cell_char: 'n'
+            }
+        );
+        assert_eq!(
+            vec[3],
+            map::Cell {
+                left: false,
+                right: false,
+                cell_char: ','
+            }
+        );
+    }
+
+    #[test]
+    fn _last_line() {
+        let line: &str = "1 A $ ,";
+        let vec = convert_to_cells(line);
+        assert_eq!(
+            vec[0],
+            map::Cell {
+                left: false,
+                right: false,
+                cell_char: '1'
+            }
+        );
+        assert_eq!(
+            vec[1],
+            map::Cell {
+                left: false,
+                right: false,
+                cell_char: 'A'
+            }
+        );
+        assert_eq!(
+            vec[2],
+            map::Cell {
+                left: false,
+                right: false,
+                cell_char: '$'
+            }
+        );
+        assert_eq!(
+            vec[3],
+            map::Cell {
+                left: false,
+                right: false,
+                cell_char: ','
+            }
+        );
+    }
 }

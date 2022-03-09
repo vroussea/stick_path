@@ -8,11 +8,14 @@ pub struct Cell {
 }
 
 impl Cell {
-    pub fn new((left, right): (bool, bool), character: char) -> Cell{
-        return Cell {left: left, right: right, cell_char: character};
+    pub fn new((left, right): (bool, bool), character: char) -> Cell {
+        return Cell {
+            left: left,
+            right: right,
+            cell_char: character,
+        };
     }
 }
-
 
 #[derive(Clone)]
 pub struct Map {
@@ -36,12 +39,10 @@ impl Map {
         for lines in 1..map.height as usize {
             if map.cells[lines][current_columns].cell_char != '|' {
                 return Some(map.cells[lines][current_columns].cell_char);
-            }
-            else {
+            } else {
                 if map.cells[lines][current_columns].left {
                     current_columns -= 1;
-                }
-                else if map.cells[lines][current_columns].right {
+                } else if map.cells[lines][current_columns].right {
                     current_columns += 1;
                 }
             }
@@ -67,5 +68,21 @@ impl fmt::Display for Map {
             result.push('\n');
         }
         write!(f, "{}", result)
+    }
+}
+
+#[cfg(test)]
+mod tests_map {
+    use super::*;
+    #[test]
+    fn small_map() {
+        let mut map = Map::new(3, 1);
+        map.cells.push([Cell::new((false, false), 'a')].to_vec());
+        map.cells.push([Cell::new((false, false), '|')].to_vec());
+        map.cells.push([Cell::new((false, false), '1')].to_vec());
+        println!("cells: {:?}", map.cells);
+        let map = map.resolve();
+
+        assert_eq!(map.answer, ["a1"].to_vec());
     }
 }
