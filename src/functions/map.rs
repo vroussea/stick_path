@@ -53,7 +53,7 @@ impl Map {
     pub fn resolve(&mut self) -> &Self {
         for columns in 0..self.width as usize {
             let mut current: String = String::from(self.cells[0][columns].cell_char);
-            current.push(Map::resolve_one_column(self, columns).expect("how could that happen ?"));
+            current.push(Map::resolve_one_column(self, columns).expect("Error in width/heigh"));
             self.answer.push(current);
         }
         return self;
